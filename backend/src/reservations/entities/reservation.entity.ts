@@ -1,6 +1,5 @@
 import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, JoinColumn } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
-import { Participant } from '../../participants/entities/participant.entity';
 import { Availability } from '../../availabilities/entities/availability.entity';
 
 @Entity()
@@ -16,10 +15,6 @@ export class Reservation {
   @ApiProperty()
   @Column({ nullable: true })
   description?: string;
-
-  @ApiProperty()
-  @Column({ type: 'timestamp' })
-  date: Date;
 
   @ApiProperty()
   @Column()
@@ -38,6 +33,7 @@ export class Reservation {
   @Column('uuid')
   availabilityId: string;
 
-  @OneToMany(() => Participant, (participant) => participant.reservation, { cascade: true })
-  participants: Participant[];
+  @Column({ type: 'int', default: 1 })
+  participantsCount: number;
+
 }

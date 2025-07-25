@@ -3,7 +3,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AvailabilitiesModule } from './availabilities/availabilities.module';
 import { EstablishmentsModule } from './establishments/establishments.module';
 import { typeOrmConfig } from './typeorm.config';
-import { ParticipantsModule } from './participants/participants.module';
 import { ReservationsModule } from './reservations/reservations.module';
 // autres imports...
 @Module({
@@ -15,7 +14,6 @@ import { ReservationsModule } from './reservations/reservations.module';
     }),
     AvailabilitiesModule,
     EstablishmentsModule,
-    ParticipantsModule,
     ReservationsModule
     // autres modules...
   ],

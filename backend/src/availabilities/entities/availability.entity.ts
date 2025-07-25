@@ -1,6 +1,7 @@
 // src/availabilities/entities/availability.entity.ts
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, OneToOne } from 'typeorm';
 import { Establishment } from '../../establishments/entities/establishment.entity';
+import { Reservation } from '../../reservations/entities/reservation.entity';
 
 @Entity()
 export class Availability {
@@ -24,12 +25,16 @@ export class Availability {
   endTime: string;
 
   @Column({ type: 'int', default: 1 })
-  maxParticipants: number; // capacité du créneau
+  maxParticipants: number;
 
   @Column({ type: 'text', nullable: true })
   details?: string;
 
-  // Optionnel, pour gérer l’activation/désactivation
   @Column({ type: 'boolean', default: true })
   isActive: boolean;
+
+  // 🔒 Nouveau champ
+  @Column({ type: 'boolean', default: false })
+  isBooked: boolean;
+
 }

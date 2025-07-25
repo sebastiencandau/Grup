@@ -7,7 +7,7 @@ import { ApiTags } from '@nestjs/swagger';
 @ApiTags('Reservations')
 @Controller('reservations')
 export class ReservationsController {
-  constructor(private readonly reservationsService: ReservationsService) {}
+  constructor(private readonly reservationsService: ReservationsService) { }
 
   @Post()
   create(@Body() dto: CreateReservationDto) {
@@ -23,6 +23,12 @@ export class ReservationsController {
   findOne(@Param('id') id: string) {
     return this.reservationsService.findOne(id);
   }
+
+  @Get('/establishment/:id')
+  findByEstablishment(@Param('id') establishmentId: string) {
+    return this.reservationsService.findByEstablishment(establishmentId);
+  }
+
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() dto: UpdateReservationDto) {

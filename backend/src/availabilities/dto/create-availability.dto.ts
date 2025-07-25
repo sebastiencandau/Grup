@@ -1,5 +1,5 @@
 // src/availabilities/dto/create-availability.dto.ts
-import { IsUUID, IsDateString, IsString, IsOptional, Matches } from 'class-validator';
+import { IsUUID, IsDateString, IsString, IsOptional, Matches, IsIn, IsInt, Min } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class CreateAvailabilityDto {
@@ -35,7 +35,22 @@ export class CreateAvailabilityDto {
     description: 'Détails optionnels sur la disponibilité (salle, équipement, etc.)',
     example: 'Salle 2B',
   })
+  
   @IsOptional()
   @IsString()
   details?: string;
+  @ApiProperty({
+    description: 'Nombre maximum de participants pour cette disponibilité',
+    example: 5,
+  })
+
+  @ApiProperty({
+    description: 'Nombre maximum de participants pour cette disponibilité',
+    example: 5,
+  })
+  @IsInt()
+  @Min(1)
+  maxParticipants: number;
+
+
 }

@@ -9,6 +9,6 @@ import { Availability } from './entities/availability.entity';
   imports: [TypeOrmModule.forFeature([Availability])],
   controllers: [AvailabilitiesController],
   providers: [AvailabilitiesService],
-  exports: [AvailabilitiesService],
+  exports: [AvailabilitiesService, TypeOrmModule],
 })
 export class AvailabilitiesModule {}

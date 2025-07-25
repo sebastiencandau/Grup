@@ -1,4 +1,4 @@
-import { IsString, IsDateString, IsEmail, IsOptional } from 'class-validator';
+import { IsString, IsEmail, IsOptional, IsUUID, IsArray, ArrayNotEmpty, IsInt, Min } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateReservationDto {
@@ -12,10 +12,23 @@ export class CreateReservationDto {
   description?: string;
 
   @ApiProperty()
-  @IsDateString()
-  date: string;
-
-  @ApiProperty()
   @IsEmail()
   organizerEmail: string;
+
+  @ApiProperty({
+    description: 'ID de la disponibilité choisie',
+  })
+  @IsUUID()
+  availabilityId: string;
+
+  @ApiProperty({
+    description: 'Liste des emails des participants',
+    type: [String],
+  })
+
+  @IsOptional()
+  @IsInt()
+  @Min(1)
+  participantsCount?: number;
+
 }

@@ -19,12 +19,8 @@ services:
       dockerfile: Dockerfile.dev
     depends_on:
       - db
-    environment:
-      DATABASE_HOST: db
-      DATABASE_PORT: 5432
-      DATABASE_USER: grup_user
-      DATABASE_PASSWORD: secretpassword
-      DATABASE_NAME: grup_db
+    env_file:
+      - .env  # charge le .env à la racine du projet
     ports:
       - "3000:3000"
     volumes:

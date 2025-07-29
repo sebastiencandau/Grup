@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, JoinColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, JoinColumn } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { Availability } from '../../availabilities/entities/availability.entity';
 
@@ -24,7 +24,6 @@ export class Reservation {
   @Column()
   token: string;
 
-  // Relation vers la disponibilité (créneau réservé)
   @ManyToOne(() => Availability, { eager: true, onDelete: 'CASCADE' })
   @JoinColumn({ name: 'availabilityId' })
   availability: Availability;
@@ -36,4 +35,7 @@ export class Reservation {
   @Column({ type: 'int', default: 1 })
   participantsCount: number;
 
+  @ApiProperty({ type: [String] })
+  @Column('simple-array', { nullable: true })
+  participants?: string[];
 }

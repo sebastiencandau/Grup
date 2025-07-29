@@ -4,6 +4,8 @@ import {
   IsOptional,
   IsUUID,
   IsArray,
+  IsInt,
+  Min,
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
@@ -33,8 +35,14 @@ export class UpdateReservationDto {
     description: 'Liste mise à jour des emails de participants',
     type: [String],
   })
+
+  @IsOptional()
+  @IsInt()
+  @Min(1)
+  participantsCount?: number;
+
   @IsOptional()
   @IsArray()
-  @IsEmail({}, { each: true })
+  @IsString({ each: true })
   participantsEmails?: string[];
 }

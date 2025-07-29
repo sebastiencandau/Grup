@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Reservation } from './entities/reservation.entity';
@@ -6,6 +6,7 @@ import { CreateReservationDto } from './dto/create-reservation.dto';
 import { UpdateReservationDto } from './dto/update-reservation.dto';
 import { randomUUID } from 'crypto';
 import { Availability } from 'src/availabilities/entities/availability.entity';
+import { MailService } from 'src/mail/mail.service';
 
 @Injectable()
 export class ReservationsService {
@@ -14,47 +15,66 @@ export class ReservationsService {
     private reservationRepository: Repository<Reservation>,
     @InjectRepository(Availability)
     private availabilityRepository: Repository<Availability>,
+    
+    private readonly mailService: MailService,
+
   ) { }
 
-  async create(dto: CreateReservationDto) {
+
+async create(dto: CreateReservationDto): Promise<Reservation> {
     const availability = await this.availabilityRepository.findOne({
       where: { id: dto.availabilityId },
     });
 
     if (!availability) {
-      throw new NotFoundException('Availability not found');
+      throw new NotFoundException('La disponibilité demandée est introuvable.');
     }
 
     if (!availability.isActive) {
-      throw new Error('Availability is not active');
+      throw new BadRequestException("Cette disponibilité n'est plus active.");
     }
 
-    if ((availability as any).isBooked) {
-      throw new Error('Availability is already booked');
+    if (availability.isBooked) {
+      throw new ConflictException('Cette disponibilité est déjà complètement réservée.');
     }
 
-    // Vérifie que le nombre de participants ne dépasse pas la capacité
-    const count = dto.participantsCount ?? 1;
-    if (count > availability.maxParticipants) {
-      throw new Error(`Cannot reserve more than ${availability.maxParticipants} participants`);
+    const requestedCount = dto.participantsCount ?? 1;
+
+    if (requestedCount <= 0) {
+      throw new BadRequestException('Le nombre de participants doit être supérieur à 0.');
     }
 
-    // Crée la réservation
+    if (requestedCount > availability.maxParticipants) {
+      throw new BadRequestException(
+        `Nombre de participants demandé (${requestedCount}) supérieur à la capacité (${availability.maxParticipants}).`,
+      );
+    }
+
     const reservation = this.reservationRepository.create({
       title: dto.title,
       description: dto.description,
       organizerEmail: dto.organizerEmail,
       availabilityId: availability.id,
       token: randomUUID(),
-      participantsCount: count,
+      participantsCount: requestedCount,
     });
 
     const savedReservation = await this.reservationRepository.save(reservation);
 
-    // Marque la disponibilité comme réservée si la capacité est atteinte
-    if (count >= availability.maxParticipants) {
-      await this.availabilityRepository.update(availability.id, { isBooked: true });
+    if (requestedCount >= availability.maxParticipants) {
+      await this.availabilityRepository.update(availability.id, {
+        isBooked: true,
+        isActive: false,
+      });
     }
+
+    // Envoi de l'email de confirmation
+    await this.mailService.sendReservationConfirmation(
+      savedReservation.organizerEmail,
+      savedReservation.title,
+      savedReservation.participantsCount,
+      savedReservation.token,
+    );
 
     return savedReservation;
   }
@@ -114,4 +134,6 @@ export class ReservationsService {
       relations: ['participants'],
     });
   }
+
+  
 }

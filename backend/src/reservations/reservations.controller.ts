@@ -44,4 +44,5 @@ export class ReservationsController {
   findByToken(@Param('token') token: string) {
     return this.reservationsService.findByToken(token);
   }
+  
 }

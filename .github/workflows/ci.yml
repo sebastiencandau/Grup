@@ -1,24 +1,17 @@
-name: CI Pipeline
+name: Backend CI
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
   pull_request:
-    branches:
-      - main
+    branches: [main]
 
 jobs:
-  backend:
-    name: Backend Tests
+  test-backend:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: backend  # Important, tes tests sont dans backend
-
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup Node.js
         uses: actions/setup-node@v3
@@ -26,18 +19,24 @@ jobs:
           node-version: 20
 
       - name: Install dependencies
-        run: npm install
+        run: |
+          cd backend
+          npm ci
 
       - name: Run tests with coverage
-        run: npm run test:cov
-
-      - name: Upload coverage report
-        uses: actions/upload-artifact@v3
-        with:
-          name: backend-coverage
-          path: coverage/lcov-report
+        run: |
+          cd backend
+          npm run test -- --coverage
+        env:
+          CI: true
 
       - name: Check coverage threshold
         run: |
-          COVERAGE=$(npx jest --coverage --coverageThreshold='{"global":{"branches":80,"functions":80,"lines":80,"statements":80}}' | tee result.log)
-          echo "$COVERAGE"
+          cd backend
+          npx jest --coverage --coverageThreshold='{ "global": { "branches": 80, "functions": 80, "lines": 80, "statements": 80 } }'
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: backend/coverage

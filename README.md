@@ -28,6 +28,7 @@ Elle permet à un organisateur de créer un événement, d’inviter des partici
 3. Lancer les services avec Docker Compose :
    ```bash
     docker-compose up --build
+<<<<<<< HEAD
 ---
 
 ## Documentation CI/CD
@@ -40,3 +41,5 @@ Toutes les informations concernant l'intégration continue, les tests automatis�
 
 Le projet suit les bonnes pratiques pour sécuriser le code et garantir l’accessibilité aux personnes en situation de handicap.  
 Pour plus de détails, consulter le document [SECURITE_ACCESSIBILITE.md](./SECURITE_ACCESSIBILITE.md).
+
+---

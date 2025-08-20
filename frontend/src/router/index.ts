@@ -10,9 +10,19 @@ const routes = [
     component: () => import('@/modules/availabilities/pages/AvailabilityPage.vue'),
   },
   {
+    path: '/reservations/:id',
+    component: () => import('@/modules/reservations/pages/ReservationPage.vue'),
+  },
+  {
     path: '/reservations/new/:availabilityId',
     component: () => import('@/modules/reservations/pages/CreateReservationPage.vue'),
   },
+  {
+    path: '/reservation-success',
+    name: 'reservation-success',
+    component: () => import('@/modules/reservations/pages/ReservationSucess.vue'),
+  }
+
 ]
 
 const router = createRouter({

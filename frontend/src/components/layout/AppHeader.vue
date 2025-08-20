@@ -6,15 +6,8 @@
       
       <!-- Navigation -->
       <nav class="hidden md:flex space-x-6">
-        <a href="#" class="text-gray-600 hover:text-gray-900">Accueil</a>
-        <a href="#" class="text-gray-600 hover:text-gray-900">Disponibilités</a>
-        <a href="#" class="text-gray-600 hover:text-gray-900">Réserver</a>
+        <a href="/" class="text-gray-600 hover:text-gray-900">Accueil</a>
       </nav>
-
-      <!-- Right area (ex: user menu) -->
-      <div>
-        <button class="text-gray-600 hover:text-gray-900 font-medium">Connexion</button>
-      </div>
     </div>
   </header>
 </template>

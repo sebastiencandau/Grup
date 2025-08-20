@@ -3,21 +3,25 @@
     class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
     @click.self="close"
   >
-    <div class="bg-white rounded-lg p-6 max-w-md w-full">
+    <div class="bg-white rounded-lg p-6 max-w-md w-full relative">
       <h2 class="text-xl font-bold mb-4">Réserver cette disponibilité</h2>
+
+      <!-- Formulaire -->
       <form @submit.prevent="submit">
-        <div class="mb-4">
-          <label class="block mb-1 font-semibold">Titre</label>
-          <input v-model="title" type="text" required class="w-full border rounded px-3 py-2" />
-        </div>
-        <div class="mb-4">
-          <label class="block mb-1 font-semibold">Description</label>
-          <textarea v-model="description" class="w-full border rounded px-3 py-2"></textarea>
-        </div>
+        <label class="block mb-1 font-semibold">
+          Besoins particuliers (optionnel)
+        </label>
+        <textarea
+          v-model="description"
+          placeholder="Indiquez ici allergies, restrictions alimentaires, handicap ou toute autre information utile"
+          class="w-full border rounded px-3 py-2 mb-4"
+        ></textarea>
+
         <div class="mb-4">
           <label class="block mb-1 font-semibold">Email de l'organisateur</label>
           <input v-model="organizerEmail" type="email" required class="w-full border rounded px-3 py-2" />
         </div>
+
         <div class="mb-4">
           <label class="block mb-1 font-semibold">Nombre de participants</label>
           <input
@@ -29,7 +33,7 @@
             class="w-full border rounded px-3 py-2"
           />
         </div>
-        <!-- Pour simplifier on laisse la liste des participants vide -->
+
         <div class="flex justify-end space-x-4">
           <button type="button" @click="close" class="px-4 py-2 rounded bg-gray-300">Annuler</button>
           <button type="submit" class="px-4 py-2 rounded bg-blue-600 text-white">Réserver</button>
@@ -41,18 +45,25 @@
 
 <script setup lang="ts">
 import { defineProps, defineEmits, ref } from 'vue'
+import { useRouter } from 'vue-router'
 import { createReservation } from '@/services/reservationService'
 
 interface Availability {
   id: string
+  establishmentId: string
+  date: string
+  startTime: string
+  endTime: string
   maxParticipants: number
-  // autres champs si besoin
+  details: string
+  isActive: boolean
+  isBooked: boolean
 }
 
 const props = defineProps<{ availability: Availability }>()
 const emit = defineEmits(['close', 'submitted'])
+const router = useRouter()
 
-const title = ref('')
 const description = ref('')
 const organizerEmail = ref('')
 const participantsCount = ref(1)
@@ -62,18 +73,16 @@ function close() {
 }
 
 async function submit() {
-  try {
     await createReservation({
-      title: title.value,
+      title: "réservation Grup " + props.availability.date,
       description: description.value,
       organizerEmail: organizerEmail.value,
       availabilityId: props.availability.id,
       participantsCount: participantsCount.value,
-      participants: [], // liste vide pour l'instant
+      participants: [],
     })
-    emit('submitted')
-  } catch (error) {
-    alert('Erreur lors de la création de la réservation.')
-  }
+
+    // 👉 Redirection vers la page de succès
+    router.push({ name: 'reservation-success' })
 }
 </script>

@@ -61,19 +61,26 @@ async create(dto: CreateReservationDto): Promise<Reservation> {
 
     const savedReservation = await this.reservationRepository.save(reservation);
 
+    /* pour le moment à chaque réservation, la disponnibilité passe à "réservée" */
+      await this.availabilityRepository.update(availability.id, {
+        isBooked: true,
+        isActive: false,
+      });
+
+    /* le but sera dans le futur de prendre en compte la confirmation de chaque participants.
     if (requestedCount >= availability.maxParticipants) {
       await this.availabilityRepository.update(availability.id, {
         isBooked: true,
         isActive: false,
       });
-    }
+    } */
 
     // Envoi de l'email de confirmation
     await this.mailService.sendReservationConfirmation(
       savedReservation.organizerEmail,
       savedReservation.title,
       savedReservation.participantsCount,
-      savedReservation.token,
+      savedReservation.id,
     );
 
     return savedReservation;
@@ -92,17 +99,46 @@ async create(dto: CreateReservationDto): Promise<Reservation> {
 
 
   findAll() {
-    return this.reservationRepository.find({ relations: ['participants'] });
+    return this.reservationRepository.find();
   }
 
-  async findOne(id: string) {
-    const reservation = await this.reservationRepository.findOne({
-      where: { id },
-      relations: ['participants'],
-    });
-    if (!reservation) throw new NotFoundException('Reservation not found');
-    return reservation;
+async findOne(id: string) {
+  const reservation = await this.reservationRepository.findOne({
+    where: { id },
+    relations: ['availability', 'availability.establishment'], // récupère la disponibilité et l'établissement associé
+  });
+
+  if (!reservation) {
+    throw new NotFoundException('Reservation not found');
   }
+
+  return {
+    id: reservation.id,
+    title: reservation.title,
+    description: reservation.description,
+    organizerEmail: reservation.organizerEmail,
+    participantsCount: reservation.participantsCount,
+    participants: reservation.participants || [],
+    availability: {
+      id: reservation.availability.id,
+      date: reservation.availability.date,
+      startTime: reservation.availability.startTime,
+      endTime: reservation.availability.endTime,
+      maxParticipants: reservation.availability.maxParticipants,
+      details: reservation.availability.details,
+      isActive: reservation.availability.isActive,
+      isBooked: reservation.availability.isBooked,
+      establishment: {
+        id: reservation.availability.establishment.id,
+        name: reservation.availability.establishment.name,
+        description: reservation.availability.establishment.description,
+        address: reservation.availability.establishment.address,
+        phone: reservation.availability.establishment.phone,
+      },
+    },
+  };
+}
+
 
   async update(id: string, dto: UpdateReservationDto) {
     await this.reservationRepository.update(id, dto);

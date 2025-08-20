@@ -22,7 +22,7 @@ export class MailService {
         <p><strong>Nombre de participants :</strong> ${participantsCount}</p>
         <p>
           Voir les détails : 
-          <a href="https://monapp.com/reservations/${token}" style="color: #3182ce;">lien de la réservation</a>
+<a href="${process.env.APP_URL}/reservations/${token}" style="color: #3182ce;">lien de la réservation</a>
         </p>
       </div>
     `;

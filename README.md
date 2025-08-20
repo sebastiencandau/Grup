@@ -43,3 +43,8 @@ Le projet suit les bonnes pratiques pour sécuriser le code et garantir l’acce
 Pour plus de détails, consulter le document [SECURITE_ACCESSIBILITE.md](./SECURITE_ACCESSIBILITE.md).
 
 ---
+
+## Cahier de recettes
+
+Le cahier de recettes reprend l’ensemble des fonctionnalités attendues, les scénarios de tests et les résultats attendus afin de détecter les anomalies de fonctionnement et les régressions éventuelles.  
+Consulter le document [CAHIER_DE_RECETTES.md](./CAHIER_DE_RECETTES.md).

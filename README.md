@@ -28,7 +28,6 @@ Elle permet à un organisateur de créer un événement, d’inviter des partici
 3. Lancer les services avec Docker Compose :
    ```bash
     docker-compose up --build
-<<<<<<< HEAD
 ---
 
 ## Documentation CI/CD
@@ -43,7 +42,6 @@ Le projet suit les bonnes pratiques pour sécuriser le code et garantir l’acce
 Pour plus de détails, consulter le document [SECURITE_ACCESSIBILITE.md](./SECURITE_ACCESSIBILITE.md).
 
 ---
-
 ## Cahier de recettes
 
 Le cahier de recettes reprend l’ensemble des fonctionnalités attendues, les scénarios de tests et les résultats attendus afin de détecter les anomalies de fonctionnement et les régressions éventuelles.  

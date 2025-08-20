@@ -40,3 +40,5 @@ Toutes les informations concernant l'intégration continue, les tests automatis�
 
 Le projet suit les bonnes pratiques pour sécuriser le code et garantir l’accessibilité aux personnes en situation de handicap.  
 Pour plus de détails, consulter le document [SECURITE_ACCESSIBILITE.md](./SECURITE_ACCESSIBILITE.md).
+
+---

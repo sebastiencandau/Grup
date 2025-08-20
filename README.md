@@ -23,7 +23,20 @@ Elle permet à un organisateur de créer un événement, d’inviter des partici
    ```bash
    git clone https://github.com/sebastiencandau/Grup
    cd Grup
+2. Remplir les variables d'environnements à la racine du backend et du frontend en prenant en exemple les .env.example.
 
-2. Lancer les services avec Docker Compose :
+3. Lancer les services avec Docker Compose :
    ```bash
     docker-compose up --build
+---
+
+## Documentation CI/CD
+
+Toutes les informations concernant l'intégration continue, les tests automatisés et le déploiement sont détaillées dans [CICD_DOCUMENTATION.md](./CICD_DOCUMENTATION.md).
+
+---
+
+## Sécurité et accessibilité
+
+Le projet suit les bonnes pratiques pour sécuriser le code et garantir l’accessibilité aux personnes en situation de handicap.  
+Pour plus de détails, consulter le document [SECURITE_ACCESSIBILITE.md](./SECURITE_ACCESSIBILITE.md).

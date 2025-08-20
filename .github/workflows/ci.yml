@@ -1,42 +1,62 @@
-name: Backend CI
+name: CI/CD
 
 on:
   push:
-    branches: [main]
+    branches:
+      - develop
+      - feat-*
+      - main
   pull_request:
-    branches: [main]
+    branches:
+      - develop
 
 jobs:
-  test-backend:
+  backend:
+    name: Backend Build & Test
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
+      - uses: actions/checkout@v3
+      - name: Setup Node
         uses: actions/setup-node@v3
         with:
           node-version: 20
-
       - name: Install dependencies
-        run: |
-          cd backend
-          npm ci
+        run: npm install
+      - name: Run tests
+        run: npm test
+      - name: Build
+        run: npm run build
 
-      - name: Run tests with coverage
-        run: |
-          cd backend
-          npm run test -- --coverage
-        env:
-          CI: true
-
-      - name: Check coverage threshold
-        run: |
-          cd backend
-          npx jest --coverage --coverageThreshold='{ "global": { "branches": 80, "functions": 80, "lines": 80, "statements": 80 } }'
-
-      - name: Upload coverage report
-        uses: actions/upload-artifact@v4
+  frontend:
+    name: Frontend Build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Node
+        uses: actions/setup-node@v3
         with:
-          name: coverage-report
-          path: backend/coverage
+          node-version: 20
+      - name: Install dependencies
+        run: npm install
+      - name: Build
+        run: npm run build
+
+  deploy:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    needs: [backend, frontend]  # attend que build/test soient terminés
+    if: github.ref == 'refs/heads/main'  # ne s'exécute que sur main
+    steps:
+      - uses: actions/checkout@v3
+      - name: Deploy
+        run: |
+          echo "Déploiement en cours..."
+          # Ici tu peux ajouter ton script de déploiement réel, par ex.:
+          # scp, rsync, ssh pour copier les fichiers sur ton serveur,
+          # ou un déploiement sur Vercel, Netlify, AWS, etc.

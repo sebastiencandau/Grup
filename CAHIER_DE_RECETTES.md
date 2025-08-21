@@ -145,4 +145,3 @@ Il sert à vérifier le bon fonctionnement des fonctionnalités, détecter les a
 3. Accès réservation via token
 4. Vérification UI / UX complète : messages, formulaire, navigation
 5. Validation des contraintes (emails, participants, dates, horaires)
-
